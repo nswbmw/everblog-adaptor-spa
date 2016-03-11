@@ -16,7 +16,7 @@ module.exports = function* (data) {
     const contentHtml = enml2html(entities.decodeHTML(content), post.resources, data.$webApiUrlPrefix, post.noteKey)
     debug('content html -> %j', contentHtml)
 
-    post.content = enml2html(content, post.resources, data.$webApiUrlPrefix, post.noteKey)
+    post.content = contentHtml
   })
   data.posts.sort((prev, next) => {
     return next.created - prev.created
