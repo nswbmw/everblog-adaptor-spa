@@ -1,6 +1,6 @@
 {
   "name": "everblog-adaptor-spa",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SPA adaptor for [everblog](https://github.com/everblogjs/everblog).",
   "main": "index",
   "scripts": {
@@ -12,10 +12,9 @@
   ],
   "dependencies": {
     "debug": "^2.2.0",
-    "enml2text": "^0.1.1",
+    "enml2html": "^0.3.0",
     "entities": "^1.1.1",
     "handlebars": "^4.0.5",
-    "marked": "^0.3.5",
     "moment": "^2.10.6"
   },
   "author": {

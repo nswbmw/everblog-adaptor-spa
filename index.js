@@ -2,10 +2,9 @@
 
 const fs = require('fs')
 const path = require('path')
-const marked = require('marked')
 const moment = require('moment')
 const entities = require('entities')
-const enml2text = require('enml2text')
+const enml2html = require('enml2html')
 const Handlebars = require('handlebars')
 const debug = require('debug')('everblog-adaptor-spa')
 
@@ -14,13 +13,10 @@ module.exports = function* (data) {
     const content = post.content
     debug('content -> %j', content)
 
-    const contentText = entities.decodeHTML(enml2text(content))
-    debug('content text -> %j', contentText)
-
-    const contentHtml = marked(contentText.replace(/\n/g, '  \n'))
+    const contentHtml = enml2html(entities.decodeHTML(content), post.resources, data.$webApiUrlPrefix, post.noteKey)
     debug('content html -> %j', contentHtml)
 
-    post.content = contentHtml
+    post.content = enml2html(content, post.resources, data.$webApiUrlPrefix, post.noteKey)
   })
   data.posts.sort((prev, next) => {
     return next.created - prev.created
