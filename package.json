@@ -1,6 +1,6 @@
 {
   "name": "everblog-adaptor-spa",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "SPA adaptor for [everblog](https://github.com/everblogjs/everblog).",
   "main": "index",
   "scripts": {

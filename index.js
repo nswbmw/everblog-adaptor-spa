@@ -17,6 +17,7 @@ module.exports = function* (data) {
 
     let contentHtml;
     if (post.title.match(/\.md$/)) {
+      post.title = post.title.slice(0, -3);
       contentHtml = marked(entities.decodeHTML(enml2text(content)).replace(/\n/g, '  \n'))
     } else {
       contentHtml = enml2html(entities.decodeHTML(content), post.resources, data.$webApiUrlPrefix, post.noteKey)
