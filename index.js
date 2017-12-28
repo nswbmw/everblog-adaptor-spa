@@ -1,7 +1,6 @@
-'use strict';
-
 const fs = require('fs')
 const path = require('path')
+
 const marked = require('marked')
 const moment = require('moment')
 const entities = require('entities')
@@ -10,24 +9,25 @@ const enml2text = require('enml2text')
 const Handlebars = require('handlebars')
 const debug = require('debug')('everblog-adaptor-spa')
 
-module.exports = function* (data) {
-  data.posts.forEach(post => {
-    const content = post.content
-    debug('content -> %j', content)
-
-    let contentHtml;
-    if (post.title.match(/\.md$/)) {
-      post.title = post.title.slice(0, -3);
-      contentHtml = marked(entities.decodeHTML(enml2text(content)).replace(/\n/g, '  \n'))
-    } else {
-      contentHtml = enml2html(entities.decodeHTML(content), post.resources, data.$webApiUrlPrefix, post.noteKey)
-    }
-    debug('content html -> %j', contentHtml)
-
-    post.content = contentHtml
-  })
-  data.posts.sort((prev, next) => {
+module.exports = async function everblogAdaptorSpa (data, cleanMode = false) {
+  data.notes.sort((prev, next) => {
     return next.created - prev.created
+  })
+  data.notes.forEach(note => {
+    debug(`title: ${note.title}, content(enml): ${note.content}`)
+
+    let contentHtml
+    if (note.title.match(/\.md$/)) {
+      note.title = note.title.slice(0, -3)
+      const contentMarkdown = entities.decodeHTML(enml2text(note.content)).replace(/\n/g, '  \n')
+      debug(`title: ${note.title}, content(markdown): ${JSON.stringify(contentMarkdown)}`)
+      contentHtml = marked(contentMarkdown)
+    } else {
+      note.content = entities.decodeHTML(note.content)
+      contentHtml = enml2html(note, cleanMode)
+    }
+    note.content = contentHtml
+    debug(`title: ${note.title}, content(html): ${JSON.stringify(contentHtml)}`)
   })
 
   const srcDir = path.dirname(module.parent.filename)
@@ -45,5 +45,5 @@ module.exports = function* (data) {
 
 Handlebars.registerHelper('date', timestamp => {
   const date = moment(+timestamp).format('YYYY-MM-DD HH:mm')
-  return new Handlebars.SafeString(date);
-});
+  return new Handlebars.SafeString(date)
+})
